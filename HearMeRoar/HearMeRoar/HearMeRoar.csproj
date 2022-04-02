@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ViewModels\AboutViewModel.cs" />
+    <Compile Remove="ViewModels\ItemDetailViewModel.cs" />
+    <Compile Remove="ViewModels\ItemsViewModel.cs" />
+    <Compile Remove="ViewModels\LoginViewModel.cs" />
+    <Compile Remove="ViewModels\NewItemViewModel.cs" />
+    <Compile Remove="Views\AboutPage.xaml.cs" />
+    <Compile Remove="Views\ItemDetailPage.xaml.cs" />
+    <Compile Remove="Views\ItemsPage.xaml.cs" />
+    <Compile Remove="Views\LoginPage.xaml.cs" />
+    <Compile Remove="Views\NewItemPage.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Views\AboutPage.xaml" />
+    <EmbeddedResource Remove="Views\ItemDetailPage.xaml" />
+    <EmbeddedResource Remove="Views\ItemsPage.xaml" />
+    <EmbeddedResource Remove="Views\LoginPage.xaml" />
+    <EmbeddedResource Remove="Views\NewItemPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="CampaignMsg.txt" />
+    <None Remove="shamrockBG.png" />
+    <None Remove="ShareBackground2.jpg" />
+    <None Remove="shareFont.ttf" />
+    <None Remove="Voz.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="CampaignMsg.txt" />
+    <EmbeddedResource Include="Voz.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="shamrockBG.png" />
+    <EmbeddedResource Include="ShareBackground2.jpg" />
+    <EmbeddedResource Include="shareFont.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BitmapToVector.SkiaSharp" Version="1.16.3" />
+    <PackageReference Include="Eto.Forms.Controls.SkiaSharp" Version="1.0.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+    <PackageReference Include="Nancy" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="SkiaSharp" Version="2.80.3" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.3" />
+    <PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
+    <PackageReference Include="Xam.Plugins.TextToSpeech" Version="4.0.0.7" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="CampaignMsg.txt" />
+    <Resource Include="shamrockBG.png" />
+    <Resource Include="ShareBackground2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\AltMain.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

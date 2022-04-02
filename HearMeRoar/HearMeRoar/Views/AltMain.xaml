@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HearMeRoar.ViewModels"
+             x:Class="HearMeRoar.Views.AltMainPage"
+             Title="{Binding DisplayTitle}"
+             BackgroundColor="Black">
+
+    <ContentPage.BindingContext>
+        <vm:AltMainViewModel />
+    </ContentPage.BindingContext>
+
+
+    <StackLayout Orientation="Vertical"
+                     HorizontalOptions="FillAndExpand"
+                 VerticalOptions="Start">
+        <ScrollView>
+            <StackLayout>
+                <Image 
+                    HeightRequest="{Binding ImageHeight}"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="StartAndExpand"
+                    IsVisible="False"
+                    IsOpaque="True">
+                    <Image.Source>
+                        <FileImageSource File="{Binding ShareFileName}" />
+                    </Image.Source>
+                </Image>
+                <Label
+                    Text="{Binding FullMessageTextDisplay}"
+                    WidthRequest="{Binding ScreenWidth}"
+                    HorizontalOptions="FillAndExpand" 
+                    Margin="35,20,25,10"
+                    FontSize="{Binding Path=TextFontSize}"
+                    TextColor="White"
+                    MinimumHeightRequest="200"/>
+
+                <Label 
+                    Text="{Binding NotificationTextDisplay}"                    
+                    WidthRequest="{Binding ScreenWidth}"
+                    HorizontalOptions="FillAndExpand"  
+                    Margin="20,20,20,20"
+                    FontSize="{Binding Path=TextFontSize}"
+                    BackgroundColor="{Binding Path=NotificationColor}"
+                    TextColor="Silver" />
+                <Button 
+                    Text="{Binding GenerateMsgButtonText}"
+                    Command="{Binding GenerateMsg}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    WidthRequest="{Binding ButtonWidth}"
+                    MinimumWidthRequest="400"
+                    HorizontalOptions="Center"
+                    HeightRequest="{Binding ButtonHeight}" 
+                    BorderColor="Silver"
+                    BorderWidth="2"
+                    FontSize="{Binding Path=ButtonFontSize}"
+                    Margin="20,10,20,10"
+                />
+
+                <ActivityIndicator x:Name="activity"  
+                       IsRunning="{Binding ShowRunning}"  
+                       IsEnabled="{Binding ShowRunning}"  
+                       IsVisible="{Binding ShowRunning}"  
+                       Color="Green"  
+                       BackgroundColor="Transparent"/>
+                <Button 
+                    Text="{Binding SendEmailButtonText}"
+                    Command="{Binding ShareMessageText}"
+                    BackgroundColor="White"
+                    TextColor="Black"
+                    HorizontalOptions="Center"
+                    WidthRequest="{Binding ButtonWidth}"
+                    MinimumWidthRequest="400"
+                    HeightRequest="{Binding ButtonHeight}" 
+                    IsVisible="{Binding ShowShare}"
+                    BorderColor="Silver"
+                    BorderWidth="2"
+                    FontSize="{Binding Path=ButtonFontSize}"
+                    Margin="20,-10,20,10"
+                />
+                <Button 
+                    Text="Share as Meme"
+                    Command="{Binding ShareMessageMeme}"
+                    BackgroundColor="White"
+                    TextColor="Black"
+                    HorizontalOptions="Center"
+                    WidthRequest="{Binding ButtonWidth}"
+                    MinimumWidthRequest="400"
+                    HeightRequest="{Binding ButtonHeight}" 
+                    IsVisible="{Binding ShowShare}"
+                    BorderColor="Silver"
+                    BorderWidth="2"
+                    FontSize="{Binding Path=ButtonFontSize}"
+                    Margin="20,-10,20,10"
+                />
+                <Button 
+                    Text="TTS Voice"
+                    Command="{Binding CreateVoiceMessage}"
+                    BackgroundColor="White"
+                    TextColor="Black"
+                    HorizontalOptions="Center"
+                    WidthRequest="{Binding ButtonWidth}"
+                    MinimumWidthRequest="400"
+                    HeightRequest="{Binding ButtonHeight}" 
+                    IsVisible="{Binding ShowShare}"
+                    BorderColor="Silver"
+                    BorderWidth="2"
+                    FontSize="{Binding Path=ButtonFontSize}"
+                    Margin="20,-10,20,10"
+                />
+                <Button 
+                    Text="Copy Text"
+                    Command="{Binding CopyText}"
+                    BackgroundColor="White"
+                    TextColor="Black"
+                    HorizontalOptions="Center"
+                    WidthRequest="{Binding ButtonWidth}"
+                    MinimumWidthRequest="400"
+                    HeightRequest="{Binding ButtonHeight}" 
+                    IsVisible="{Binding ShowShare}"
+                    BorderColor="Silver"
+                    BorderWidth="2"
+                    FontSize="{Binding Path=ButtonFontSize}"
+                    Margin="20,-10,20,10"
+                />
+                <Label
+                    Text="{Binding FullMessageTextDisplay_EN}"
+                    WidthRequest="{Binding ScreenWidth}"
+                    HorizontalOptions="FillAndExpand" 
+                    Margin="35,-6,25,10"
+                    FontSize="{Binding Path=TextFontSize}"
+                    TextColor="White"
+                    MinimumHeightRequest="200"/>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
+
+</ContentPage>
