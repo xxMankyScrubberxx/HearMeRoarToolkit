@@ -1,113 +1,6 @@
 ﻿{
-	"SalutationPool": [{
-			"EN": "Dear Free Russian,",
-			"RU": "Дорогой Свободный русский,"
-		},
-		{
-			"EN": "Dear Russians,",
-			"RU": "Уважаемые россияне,"
-		}, 
-		{
-			"EN": "Hello,",
-			"RU": "Здравствуйте,"
-		},
-		{
-			"EN": "Dear Reader,",
-			"RU": "Дорогой читающий,"
-		},
-		{
-			"EN": "Dear Reader,",
-			"RU": "Дорогой читающий,"
-		}
-	],
-	"SubjectPool": [{
-		"EN": "An open letter from Russian scientists and scientific journalists against the war with Ukraine",
-		"RU": "Открытое письмо российских ученых и научных журналистов против войны с Украиной"
-	},
-       {
-		"EN": "Question",
-		"RU": "Вопрос"
-	},
-       {
-		"EN": "An open letter against the war with Ukraine",
-		"RU": "Открытое письмо  против войны с Украиной"
-	},
-       {
-		"EN": "Against The War With Ukraine",
-		"RU": "против войны с Украиной"
-	},
-       {
-		"EN": "Question",
-		"RU": "Вопрос"
-	}],
-	"BodyPool": [{
-			"EN": "I hope this war will end soon. I also hope that I will soon be able to visit a free Russia, where everyone can express their opinion without fear, without fear of reprisals. I do not know who you really are. I translated this text using a translator program. Perhaps you will get this text again because I will share it with my friends.",
-			"RU": "Я надеюсь, что эта война скоро закончится. Я также надеюсь, что скоро смогу посетить свободную Россию, где каждый сможет высказывать свое мнение без страха, не опасаясь репрессий. Я не знаю, кто ты на самом деле. Я перевел этот текст с помощью программы-переводчика. Возможно, вы снова получите этот текст, потому что я поделюсь им со своими друзьями."
-		},
-		{
-			"EN": "If you want to find out what is really happening in Ukraine, bypassing the censored Russian media and the Kremlin's lies, try using the free Internet and the Telegram application, for example, this channel: https://t.me/ukrainenowrussia .",
-			"RU": "Если вы хотите узнать, что на самом деле происходит в Украине, минуя подвергнутые цензуре российские СМИ и ложь Кремля, попробуйте воспользоваться бесплатным Интернетом и приложением Telegram, например, этим каналом: https://t.me/ukrainenowrussia ."
-		},
-		{
-			"EN": "I'm writing to you because I'm worried. As far as I know, Mr. Putin has banned many social networks in Russia. If you need any information about what is happening outside of Russia right now, contact us!",
-			"RU": "я пишу вам, потому что я волнуюсь. Насколько мне известно, г-н Путин запретил многие социальные сети в России. Если вам нужна какая-либо информация о том, что сейчас происходит за пределами России, свяжитесь с нами!"
-		},
-		{
-			"EN": "You can find information on how to fight on the side of freedom and protect your own cybersecurity here: https://www.defenseua.com / or in Telegram: https://t.me/CyberpolUA .",
-			"RU": "Вы можете найти информацию о том, как сражаться на стороне свободы и защищать свою собственную кибербезопасность здесь: https://www.defenseua.com / или в Телеграмме: https://t.me/CyberpolUA ."
-		},
-		{
-			"EN": "Another way to circumvent censorship in the media: https://www.bbcnewsd73hkzno2ini43t4gblxvycyac5aw4gnv7t2rccijh7745uqd.onion/russian or the Psiphon app.",
-			"RU": "Еще один способ обойти цензуру в СМИ: https://www.bbcnewsd73hkzno2ini43t4gblxvycyac5aw4gnv7t2rccijh7745uqd.onion/russian или приложение Psiphon."
-		},
-		{
-			"EN": "Your media are being censored. The Kremlin is lying. Find out the truth about Ukraine on the free Internet and in the Telegram app. It's time to overthrow dictator Putin!",
-			"RU": "ваши СМИ подвергаются цензуре. Кремль лжет. Узнайте правду об Украине в свободном Интернете и в приложении Telegram. Время свергнуть диктатора Путина!"
-		},
-		{
-			"EN": "The Kremlin is lying! Putin's war has brought disaster to the people of Russia! There is no money in the banks, there is no fuel, all foreign companies have left the country, and Putin is hiding in his palace in Gelendzhik!",
-			"RU": "Кремль лжет! Война Путина принесла катастрофу народу России! В банках нет денег,нет топлива,все иностранные компании ушли из страны,а Путин прячется в своем дворце в Геленджике!"
-		},
-		{
-			"EN": "More sons of the Russian People died in Ukraine than in Afghanistan! Putin's war to destroy Russia! There is no fuel, there is no money in banks. Putin is destroying Russia! The Kremlin is lying!",
-			"RU": "На Украине погибло больше сынов Русского Народа, чем в Афганистане! Война Путина уничтожит Россию! Топлива нет, денег в банках нет. Путин уничтожает Россию! Кремль лжет!"
-		},
-		{
-			"EN": "More than 10,000 sons of the Russian People died in Ukraine. The Kremlin is lying! Putin hid in his palace in Gelendzhik, but there is no money in the banks, there is no fuel, Russia has gone bankrupt. Get up!",
-			"RU": "В Украине погибло более 10 000 сынов Русского Народа. Кремль лжет! Путин спрятался в своем дворце в Геленджике, но денег в банках нет, топлива нет, Россия обанкротилась. Вставай!"
-		},
-		{
-			"EN": "Your media is censored. The Kremlin is lying. Search for the truth about the war in Ukraine in TOR: https://www.bbcnewsd73hkzno2ini43t4gblxvycyac5aw4gnv7t2rccijh7745uqd.onion/russian or use the Psiphon app.",
-			"RU": "Ваши СМИ подвергаются цензуре. Кремль лжет. Ищите правду о войне в Украине в TOR: https://www.bbcnewsd73hkzno2ini43t4gblxvycyac5aw4gnv7t2rccijh7745uqd.onion/russian или используйте приложение Psiphon."
-		},
-		{
-			"EN": "On February 22, the Russian armed forces crossed the border and entered the territory of the eastern regions of Ukraine.\r\n\r\nPutin gave the order to launch a military operation against Ukraine, despite the terrible price that both Ukraine and Russia will undoubtedly pay for this war, despite all the voices of reason that sounded in Russia and abroad.\r\n\r\nThe official rhetoric of Russia claims that this is done for the purpose of self - defense. But you can't fool History. The arson of the Reichstag was exposed, and today no revelations are required – everything is obvious from the very beginning.\r\n\r\nYour organization supports war crimes against civilians, senseless deaths and violence against Ukrainians as well as their own people who do not want this war.",
-			"RU": "22 февраля вооруженные силы России пересекли границу и вошли на территорию восточных областей Украины.\r\n\r\nПутин отдал приказ о начале военной операции против Украины, несмотря на страшную цену, которую несомненно заплатят за эту войну и Украина, и Россия, несмотря на все голоса разума, звучавшие в России и за ее пределами.\r\n\r\nОфициальная риторика России утверждает, что это делается с целью «самозащиты». Но Историю не обманешь. Поджог Рейхстага был разоблачен, а сегодня разоблачения не требуются – все очевидно с самого начала.\r\n\r\nВаша организация актуальной поддерживает военные преступления против мирных жителей, бессмысленные смерти и насилие против украинского как и собственного народа который не желает этой войны."
-		},
-     {
-			"EN": "I hope this war will end soon. I also hope that I will soon be able to visit a free Russia, where everyone can express their opinion without fear, without fear of reprisals. I do not know who you really are. I translated this text using a translator program. Perhaps you will get this text again because I will share it with my friends.",
-			"RU": "Я надеюсь, что эта война скоро закончится. Я также надеюсь, что скоро смогу посетить свободную Россию, где каждый сможет высказывать свое мнение без страха, не опасаясь репрессий. Я не знаю, кто ты на самом деле. Я перевел этот текст с помощью программы-переводчика. Возможно, вы снова получите этот текст, потому что я поделюсь им со своими друзьями."
-		}
-	],
-	"ClosingPool": [{
-		"EN": "I don't wish you any harm. Sincerely.",
-		"RU": "Я не желаю тебе никакого вреда. Искренне."
-	},
-        {
-                "EN": "PS: I am a real person and I care about freedom and world peace. I hope you're okay. Take care of yourself!",
-		"RU": "PS: Я реальный человек, и я забочусь о свободе и мире во всем мире. Я надеюсь, ты в порядке. Береги себя!"
-        },
-        {
-                "EN": "PS: I am a real person and I care about freedom and world peace. I hope you're okay. Take care of yourself!",
-		"RU": "PS: Я реальный человек, и я забочусь о свободе и мире во всем мире. Я надеюсь, ты в порядке. Береги себя!"
-        }
-     ],
-	"SignaturPool": [{
-		"EN": "We are the Legion.",
-		"RU": "Мы - Легион."
-	}],
 	"Settings": [{
-			"Disclaimer": "We the people of the world have a message to the Russian nation.\r\n\r\nA nation that is to pay a huge price because of the shameful decision of the dictator Putin to attack an independent Ukraine by armed forces. The joint action of all the states of the free world, as a response to Russia’s aggression, will lead to the collapse of the entire country.\r\n\r\nHowever, nearly 150 million Russians do not know the truth about the causes or course of the war in Ukraine. It is fed with the lies of the Kremlin propaganda. There is no free media in Russia and the internet is censored.\r\n\r\nIt is possible for each of us to convey a direct message to the inhabitants of this enslaved country.\r\n\r\nIncredibleGeeks gives you a tool that allows you to send messages from your phones directly to randomly selected Russians.\r\n\r\nLet them know the truth. Let them know the power of the free world!\r\n\r\n\r\nBe mindful that there is a line where constant and repeated sending of messages by an individual could be viewed as abuse."
+			"Disclaimer": "We the people of the world have a message to the Russian nation.\r\n\r\nA nation that is to pay a huge price because of the shameful decision of the dictator Putin to attack an independent Ukraine by armed forces. The joint action of all the states of the free world, as a response to Russia’s aggression, will lead to the collapse of the entire country.\r\n\r\nHowever, nearly 150 million Russians do not know the truth about the causes or course of the war in Ukraine. It is fed with the lies of the Kremlin propaganda. There is no free media in Russia and the internet is censored.\r\n\r\nIt is possible for each of us to convey a direct message to the inhabitants of this enslaved country.\r\n\r\nThe Anonymous community gives you a tool that allows you to send messages from your phones directly to randomly selected Russians.\r\n\r\nLet them know the truth. Let them know the power of the free world!\r\n\r\n\r\nBe mindful that there is a line where constant and repeated sending of messages by an individual could be viewed as abuse."
 		},
 		{
 			"exclamationOccurence": "1"
@@ -150,12 +43,12 @@
 		},
 		{
 			"emailListAPI": "https://wearebadmofos.com/emAPI.php"
+		},
+		{
+			"grammarAPI": "https://wearebadmofos.com/Grammar.php"
+		},
+		{
+			"subjectAPI": "https://wearebadmofos.com/subjectAPI2.php"
 		}
-	],
-	"ThesaurusPool": [{
-		"EN-Key": "[fuck]",
-		"EN-Replace": "truck",
-		"RU-Key": "[ass]",
-		"RU-Replace": "butt"
-	}]
+	]
 }

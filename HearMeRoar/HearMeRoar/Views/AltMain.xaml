@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:HearMeRoar.ViewModels"
              x:Class="HearMeRoar.Views.AltMainPage"
-             Title="{Binding DisplayTitle}"
+             Title="Hear Me Roar!"
              BackgroundColor="Black">
 
     <ContentPage.BindingContext>
@@ -12,9 +12,34 @@
 
 
     <StackLayout Orientation="Vertical"
-                     HorizontalOptions="FillAndExpand"
-                 VerticalOptions="Start">
-        <ScrollView>
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="Start">
+        <Grid Margin="0,0,0,0"
+                        MinimumHeightRequest="45"
+                        IsVisible="{Binding ShowShare}"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        HorizontalOptions="FillAndExpand">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="125" />
+                <ColumnDefinition Width="50" />
+            </Grid.ColumnDefinitions>
+            <Label Text="{Binding TranslationText}"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="10,3,0,0"
+                        TextColor="Silver"
+                        HorizontalTextAlignment="End"/>
+            <Switch IsToggled="{Binding ShowEnglish}"
+                        Grid.Column="2"
+                        Grid.Row="0"
+                        ThumbColor="{StaticResource Primary}"
+                        OnColor="Goldenrod">
+            </Switch>
+        </Grid>
+
+        <ScrollView MinimumHeightRequest="150">
             <StackLayout>
                 <Image 
                     HeightRequest="{Binding ImageHeight}"
@@ -32,9 +57,11 @@
                     HorizontalOptions="FillAndExpand" 
                     Margin="35,20,25,10"
                     FontSize="{Binding Path=TextFontSize}"
-                    TextColor="White"
-                    MinimumHeightRequest="200"/>
-
+                    TextColor="White">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleLanguage}" />
+                    </Label.GestureRecognizers>
+                </Label>
                 <Label 
                     Text="{Binding NotificationTextDisplay}"                    
                     WidthRequest="{Binding ScreenWidth}"
@@ -43,6 +70,16 @@
                     FontSize="{Binding Path=TextFontSize}"
                     BackgroundColor="{Binding Path=NotificationColor}"
                     TextColor="Silver" />
+            </StackLayout>
+        </ScrollView>
+        <ScrollView>
+            <StackLayout>
+                <ActivityIndicator x:Name="activity"  
+                       IsRunning="{Binding ShowRunning}"  
+                       IsEnabled="{Binding ShowRunning}"  
+                       IsVisible="{Binding ShowRunning}"  
+                       Color="Green"  
+                       BackgroundColor="Transparent"/>
                 <Button 
                     Text="{Binding GenerateMsgButtonText}"
                     Command="{Binding GenerateMsg}"
@@ -57,13 +94,6 @@
                     FontSize="{Binding Path=ButtonFontSize}"
                     Margin="20,10,20,10"
                 />
-
-                <ActivityIndicator x:Name="activity"  
-                       IsRunning="{Binding ShowRunning}"  
-                       IsEnabled="{Binding ShowRunning}"  
-                       IsVisible="{Binding ShowRunning}"  
-                       Color="Green"  
-                       BackgroundColor="Transparent"/>
                 <Button 
                     Text="{Binding SendEmailButtonText}"
                     Command="{Binding ShareMessageText}"
@@ -124,59 +154,6 @@
                     FontSize="{Binding Path=ButtonFontSize}"
                     Margin="20,-10,20,10"
                 />
-                <Button 
-                    Text="UDP"
-                    Command="{Binding UDPAttack}"
-                    BackgroundColor="Red"
-                    TextColor="Black"
-                    HorizontalOptions="Center"
-                    WidthRequest="{Binding ButtonWidth}"
-                    MinimumWidthRequest="400"
-                    HeightRequest="{Binding ButtonHeight}" 
-                    IsVisible="{Binding ShowShare}"
-                    BorderColor="Silver"
-                    BorderWidth="2"
-                    FontSize="{Binding Path=ButtonFontSize}"
-                    Margin="20,-10,20,10"
-                />
-                <Button 
-                    Text="TCP"
-                    Command="{Binding TCPAttack}"
-                    BackgroundColor="Red"
-                    TextColor="Black"
-                    HorizontalOptions="Center"
-                    WidthRequest="{Binding ButtonWidth}"
-                    MinimumWidthRequest="400"
-                    HeightRequest="{Binding ButtonHeight}" 
-                    IsVisible="{Binding ShowShare}"
-                    BorderColor="Silver"
-                    BorderWidth="2"
-                    FontSize="{Binding Path=ButtonFontSize}"
-                    Margin="20,-10,20,10"
-                />
-                <Button 
-                    Text="ICMP"
-                    Command="{Binding ICMPAttack}"
-                    BackgroundColor="Red"
-                    TextColor="Black"
-                    HorizontalOptions="Center"
-                    WidthRequest="{Binding ButtonWidth}"
-                    MinimumWidthRequest="400"
-                    HeightRequest="{Binding ButtonHeight}" 
-                    IsVisible="{Binding ShowShare}"
-                    BorderColor="Silver"
-                    BorderWidth="2"
-                    FontSize="{Binding Path=ButtonFontSize}"
-                    Margin="20,-10,20,10"
-                />
-                <Label
-                    Text="{Binding FullMessageTextDisplay_EN}"
-                    WidthRequest="{Binding ScreenWidth}"
-                    HorizontalOptions="FillAndExpand" 
-                    Margin="35,-6,25,10"
-                    FontSize="{Binding Path=TextFontSize}"
-                    TextColor="White"
-                    MinimumHeightRequest="200"/>
             </StackLayout>
         </ScrollView>
     </StackLayout>

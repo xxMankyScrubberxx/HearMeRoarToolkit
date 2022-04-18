@@ -334,6 +334,13 @@ namespace HearMeRoar.ViewModels
             set { SetProperty(ref emailListAPI, value); }
         }
 
+        string grammarAPI = string.Empty;
+        public string GrammarAPI
+        {
+            get { return grammarAPI; }
+            set { SetProperty(ref grammarAPI, value); }
+        }
+
 
         WebView testWebSource;
         public WebView TestWebSource
@@ -353,57 +360,8 @@ namespace HearMeRoar.ViewModels
 
 
 
-        public string sSalutePool;
-        public string sSubjPool;
-        public string sBodyPool;
-        public string sClosePool;
-        public string sSignPool;
-        public string sThesPool;
         public string sSettings;
-
-        FormattedString messageSalutation;
-        public string MessageSalutation_EN;
-        public FormattedString MessageSalutation
-        {
-            get { return messageSalutation; }
-            set
-            {
-                SetProperty(ref messageSalutation, value);
-                OnPropertyChanged("SendEmailButtonText");
-            }
-        }
-
-        FormattedString fsBody1;
-        public string Body1_EN;
-        public FormattedString Body1
-        {
-            get { return fsBody1; }
-            set { SetProperty(ref fsBody1, value); }
-        }
-
-        FormattedString fsEmailSubjectText;
-        public string EmailSubjectText_EN;
-        public FormattedString EmailSubjectText
-        {
-            get { return fsEmailSubjectText; }
-            set { SetProperty(ref fsEmailSubjectText, value); }
-        }
-
-        FormattedString fsMsgCloseText;
-        public string MsgCloseText_EN;
-        public FormattedString MsgCloseText
-        {
-            get { return fsMsgCloseText; }
-            set { SetProperty(ref fsMsgCloseText, value); }
-        }
-
-        FormattedString fsMsgSignText;
-        public string MsgSignText_EN;
-        public FormattedString MsgSignText
-        {
-            get { return fsMsgSignText; }
-            set { SetProperty(ref fsMsgSignText, value); }
-        }
+               
 
 
 
@@ -466,35 +424,7 @@ namespace HearMeRoar.ViewModels
         }
 
 
-        public string Thesaurusify(string input)
-        {
-            string output = input;
-
-            try
-            {
-                if (ThesaurusEntries != null)
-                {
-                    if (ThesaurusEntries.InsultFilterItems.Count > 0)
-                    {
-                        foreach (SlangFilter.SlangFilterItem item in ThesaurusEntries.InsultFilterItems)
-                        {
-                            try
-                            {
-                                output = output.Replace(item.WordKey, item.WordReplace);
-                            }
-                            catch (Exception ex)
-                            {
-                                //do something
-                            }
-                        }
-                    }
-                }
-            }
-            finally { }
-
-            return output;
-        }
-
+        
         string msgTranslationName;
         public string MsgTranslationName
         {
@@ -505,60 +435,7 @@ namespace HearMeRoar.ViewModels
 
         public List<String> lstEmails;
 
-        public List<String> lstSalutePool;
-
-        public List<String> lstSubjPool;
-
-        public List<String> lstBodyPool;
-
-        public List<String> lstClosePool;
-
-        public List<String> lstSignPool;
-
-
-        public List<String> lstSalutePool_EN;
-
-        public List<String> lstSubjPool_EN;
-
-        public List<String> lstBodyPool_EN;
-
-        public List<String> lstClosePool_EN;
-
-        public List<String> lstSignPool_EN;
-
-
-
-        public SlangFilter ThesaurusEntries;
-        public SlangFilter ThesaurusEntries_EN;
-        public class SlangFilter
-        {
-            public List<SlangFilterItem> InsultFilterItems = new List<SlangFilterItem>();
-
-            public class SlangFilterItem
-            {
-                public SlangFilterItem(string WordKey, string WordReplace)
-                {
-                    wordKey = WordKey;
-                    wordReplace = WordReplace;
-                }
-
-                string wordKey = string.Empty;
-                public string WordKey
-                {
-                    get { return wordKey; }
-                    set { wordKey = value; }
-                }
-
-                string wordReplace = string.Empty;
-                public string WordReplace
-                {
-                    get { return wordReplace; }
-                    set { wordReplace = value; }
-                }
-
-            }
-        }
-
+        
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName] string propertyName = "",
             Action onChanged = null)

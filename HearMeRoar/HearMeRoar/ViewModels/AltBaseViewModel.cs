@@ -15,6 +15,10 @@ namespace HearMeRoar.ViewModels
 {
     public class AltBaseViewModel : ContentPage, INotifyPropertyChanged
     {
+        //private string myAdID = "ca-app-pub-2977343587298168/6549534277";
+        //private string myAdID = "ca-app-pub-2977343587298168/1024026224";
+        //private string myAdID = "ca-app-pub-2977343587298168/2189295473";
+        //private string demoAdID = "ca-app-pub-3940256099942544/6300978111";
 
         string debugConfigDataLocation = "http://incrediblegeeks.com/uploads/CampaignMsg.txt";
         public string DebugConfigDataLocation { get => debugConfigDataLocation; }
@@ -230,6 +234,7 @@ namespace HearMeRoar.ViewModels
             set
             {
                 SetProperty(ref showShare, value);
+                CallBindingToggle();
             }
         }
 
@@ -240,8 +245,15 @@ namespace HearMeRoar.ViewModels
             set
             {
                 SetProperty(ref showRunning, value);
-                OnPropertyChanged("ShowShare");
+                if (!showRunning) { ShowShare = showShare; }
+                CallBindingToggle();
             }
+        }
+
+
+        public bool IsDisabled
+        {
+            get { return !showRunning; }
         }
 
 
@@ -330,6 +342,21 @@ namespace HearMeRoar.ViewModels
             set { SetProperty(ref emailListAPI, value); }
         }
 
+        string grammarAPI = string.Empty;
+        public string GrammarAPI
+        {
+            get { return grammarAPI; }
+            set { SetProperty(ref grammarAPI, value); }
+        }
+
+
+        string subjectAPI = string.Empty;
+        public string SubjectAPI
+        {
+            get { return subjectAPI; }
+            set { SetProperty(ref subjectAPI, value); }
+        }
+
 
         WebView testWebSource;
         public WebView TestWebSource
@@ -349,57 +376,8 @@ namespace HearMeRoar.ViewModels
 
 
 
-        public string sSalutePool;
-        public string sSubjPool;
-        public string sBodyPool;
-        public string sClosePool;
-        public string sSignPool;
-        public string sThesPool;
         public string sSettings;
 
-        FormattedString messageSalutation;
-        public string MessageSalutation_EN;
-        public FormattedString MessageSalutation
-        {
-            get { return messageSalutation; }
-            set
-            {
-                SetProperty(ref messageSalutation, value);
-                OnPropertyChanged("SendEmailButtonText");
-            }
-        }
-
-        FormattedString fsBody1;
-        public string Body1_EN;
-        public FormattedString Body1
-        {
-            get { return fsBody1; }
-            set { SetProperty(ref fsBody1, value); }
-        }
-
-        FormattedString fsEmailSubjectText;
-        public string EmailSubjectText_EN;
-        public FormattedString EmailSubjectText
-        {
-            get { return fsEmailSubjectText; }
-            set { SetProperty(ref fsEmailSubjectText, value); }
-        }
-
-        FormattedString fsMsgCloseText;
-        public string MsgCloseText_EN;
-        public FormattedString MsgCloseText
-        {
-            get { return fsMsgCloseText; }
-            set { SetProperty(ref fsMsgCloseText, value); }
-        }
-
-        FormattedString fsMsgSignText;
-        public string MsgSignText_EN;
-        public FormattedString MsgSignText
-        {
-            get { return fsMsgSignText; }
-            set { SetProperty(ref fsMsgSignText, value); }
-        }
 
 
 
@@ -414,8 +392,7 @@ namespace HearMeRoar.ViewModels
             {
                 SetProperty(ref sFullMessageText, value);
 
-                OnPropertyChanged("FullMessageTextDisplay");
-                OnPropertyChanged("FullMessageText");
+                ShowRunning = false;
             }
         }
 
@@ -424,14 +401,39 @@ namespace HearMeRoar.ViewModels
         {
             get
             {
-                return sFullMessageText_EN;
+                return sFullMessageText_EN.ToUpper();
             }
             set
             {
                 SetProperty(ref sFullMessageText_EN, value);
+            }
+        }
 
-                OnPropertyChanged("FullMessageTextDisplay_EN");
-                OnPropertyChanged("FullMessageText_EN");
+
+
+        string sFullSubjectText = string.Empty;
+        public string FullSubjectText
+        {
+            get
+            {
+                return sFullSubjectText;
+            }
+            set
+            {
+                SetProperty(ref sFullSubjectText, value);
+            }
+        }
+
+        string sFullSubjectText_EN = string.Empty;
+        public string FullSubjectText_EN
+        {
+            get
+            {
+                return sFullSubjectText_EN.ToUpper();
+            }
+            set
+            {
+                SetProperty(ref sFullSubjectText_EN, value);
             }
         }
 
@@ -440,7 +442,14 @@ namespace HearMeRoar.ViewModels
         {
             get
             {
-                return sFullMessageText.Replace("[", "").Replace("]", "");
+                if (showEnglish)
+                {
+                    return sFullMessageText.Replace("[", "").Replace("]", "");
+                }
+                else
+                {
+                    return sFullMessageText_EN.Replace("[", "").Replace("]", "");
+                }
             }
         }
 
@@ -449,7 +458,27 @@ namespace HearMeRoar.ViewModels
         {
             get
             {
-                return sFullMessageText_EN.Replace("[", "").Replace("]", "");
+                return sFullMessageText_EN.ToUpper().Replace("[", "").Replace("]", "");
+            }
+        }
+
+
+
+
+        public string FullSubjectTextDisplay
+        {
+            get
+            {
+                return sFullSubjectText.Replace("[", "").Replace("]", "");
+            }
+        }
+
+
+        public string FullSubjectTextDisplay_EN
+        {
+            get
+            {
+                return sFullSubjectText_EN.ToUpper().Replace("[", "").Replace("]", "");
             }
         }
 
@@ -462,34 +491,6 @@ namespace HearMeRoar.ViewModels
         }
 
 
-        public string Thesaurusify(string input)
-        {
-            string output = input;
-
-            try
-            {
-                if (ThesaurusEntries != null)
-                {
-                    if (ThesaurusEntries.InsultFilterItems.Count > 0)
-                    {
-                        foreach (SlangFilter.SlangFilterItem item in ThesaurusEntries.InsultFilterItems)
-                        {
-                            try
-                            {
-                                output = output.Replace(item.WordKey, item.WordReplace);
-                            }
-                            catch (Exception ex)
-                            {
-                                //do something
-                            }
-                        }
-                    }
-                }
-            }
-            finally { }
-
-            return output;
-        }
 
         string msgTranslationName;
         public string MsgTranslationName
@@ -498,62 +499,91 @@ namespace HearMeRoar.ViewModels
             set { SetProperty(ref msgTranslationName, value); }
         }
 
+        bool showEnglish = false;
+        public bool ShowEnglish
+        {
+            get
+            {
+                return showEnglish;
+            }
+            set
+            {
+                SetProperty(ref showEnglish, value);
+                TranslationText = TranslationText;
+                CallBindingToggle();
+            }
+        }
+
+        public void CallBindingToggle()
+        {
+            OnPropertyChanged("FullSubjectText");
+            OnPropertyChanged("FullSubjectTextDisplay");
+            OnPropertyChanged("FullSubjectTextDisplay_EN");
+            OnPropertyChanged("FullSubjectText_EN");
+            OnPropertyChanged("FullMessageTextDisplay");
+            OnPropertyChanged("TranslationText");
+            OnPropertyChanged("FullMessageText");
+            OnPropertyChanged("IsDisabled");
+            OnPropertyChanged("ShowShare");
+            OnPropertyChanged("ShowEnglish");
+            OnPropertyChanged("ShowRunning");
+            OnPropertyChanged("TranslationText");
+        }
+
+        public void CallBindingComplete()
+        {
+            ShowRunning = false;
+            OnPropertyChanged("FullSubjectText");
+            OnPropertyChanged("FullSubjectTextDisplay");
+            OnPropertyChanged("FullSubjectTextDisplay_EN");
+            OnPropertyChanged("FullSubjectText_EN");
+            OnPropertyChanged("FullMessageTextDisplay");
+            OnPropertyChanged("TranslationText");
+            OnPropertyChanged("FullMessageText");
+            OnPropertyChanged("IsDisabled");
+            OnPropertyChanged("ShowShare");
+            OnPropertyChanged("ShowEnglish");
+            OnPropertyChanged("ShowRunning");
+            OnPropertyChanged("TranslationText");
+        }
+
+        public void CallBindingStart()
+        {
+            ShowRunning = true;
+            OnPropertyChanged("FullSubjectText");
+            OnPropertyChanged("FullSubjectTextDisplay");
+            OnPropertyChanged("FullSubjectTextDisplay_EN");
+            OnPropertyChanged("FullSubjectText_EN");
+            OnPropertyChanged("FullMessageTextDisplay");
+            OnPropertyChanged("TranslationText");
+            OnPropertyChanged("FullMessageText");
+            OnPropertyChanged("IsDisabled");
+            OnPropertyChanged("ShowShare");
+            OnPropertyChanged("ShowEnglish");
+            OnPropertyChanged("ShowRunning");
+            OnPropertyChanged("TranslationText");
+        }
+
+        string translationText = "English";
+        public string TranslationText
+        {
+            get { return translationText; }
+            set
+            {
+                if (showEnglish != true)
+                {
+                    translationText = "English";
+                }
+                else
+                {
+                    translationText = "Russian";
+                }
+                SetProperty(ref translationText, translationText);
+            }
+        }
 
         public List<String> lstEmails;
 
-        public List<String> lstSalutePool;
-
-        public List<String> lstSubjPool;
-
-        public List<String> lstBodyPool;
-
-        public List<String> lstClosePool;
-
-        public List<String> lstSignPool;
-
-
-        public List<String> lstSalutePool_EN;
-
-        public List<String> lstSubjPool_EN;
-
-        public List<String> lstBodyPool_EN;
-
-        public List<String> lstClosePool_EN;
-
-        public List<String> lstSignPool_EN;
-
-
-
-        public SlangFilter ThesaurusEntries;
-        public SlangFilter ThesaurusEntries_EN;
-        public class SlangFilter
-        {
-            public List<SlangFilterItem> InsultFilterItems = new List<SlangFilterItem>();
-
-            public class SlangFilterItem
-            {
-                public SlangFilterItem(string WordKey, string WordReplace)
-                {
-                    wordKey = WordKey;
-                    wordReplace = WordReplace;
-                }
-
-                string wordKey = string.Empty;
-                public string WordKey
-                {
-                    get { return wordKey; }
-                    set { wordKey = value; }
-                }
-
-                string wordReplace = string.Empty;
-                public string WordReplace
-                {
-                    get { return wordReplace; }
-                    set { wordReplace = value; }
-                }
-
-            }
-        }
 
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName] string propertyName = "",

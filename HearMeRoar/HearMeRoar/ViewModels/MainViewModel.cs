@@ -48,7 +48,6 @@ namespace HearMeRoar.ViewModels
             GetStringPoolData();
             CreateMessageImage(true);
 
-            ShowRunning = false;
         }
 
 
@@ -65,27 +64,7 @@ namespace HearMeRoar.ViewModels
             string sLang_EN = "EN";
             JObject objData = JObject.Parse(JSONData);
 
-            sSalutePool = objData["SalutationPool"].ToString();
-            sSubjPool = objData["SubjectPool"].ToString();
-            sBodyPool = objData["BodyPool"].ToString();
-            sClosePool = objData["ClosingPool"].ToString();
-            sSignPool = objData["SignaturPool"].ToString();
-            sThesPool = objData["ThesaurusPool"].ToString();
             sSettings = objData["Settings"].ToString();
-
-            lstSalutePool = ParseDataFromJSON(sSalutePool, sLang);
-            lstSubjPool = ParseDataFromJSON(sSubjPool, sLang);
-            lstBodyPool = ParseDataFromJSON(sBodyPool, sLang);
-            lstClosePool = ParseDataFromJSON(sClosePool, sLang);
-            lstSignPool = ParseDataFromJSON(sSignPool, sLang);
-
-
-
-            lstSalutePool_EN = ParseDataFromJSON(sSalutePool, sLang_EN);
-            lstSubjPool_EN = ParseDataFromJSON(sSubjPool, sLang_EN);
-            lstBodyPool_EN = ParseDataFromJSON(sBodyPool, sLang_EN);
-            lstClosePool_EN = ParseDataFromJSON(sClosePool, sLang_EN);
-            lstSignPool_EN = ParseDataFromJSON(sSignPool, sLang_EN);
 
             //Settings
             try
@@ -108,6 +87,7 @@ namespace HearMeRoar.ViewModels
 
 
                 EmailListAPI = GetSettingFromJSON(sSettings, "emailListAPI");
+                GrammarAPI = GetSettingFromJSON(sSettings, "grammarAPI");
 
                 OnPropertyChanged("ButtonWidth");
                 OnPropertyChanged("ButtonHeight");
@@ -115,13 +95,6 @@ namespace HearMeRoar.ViewModels
             }
             finally { }
 
-
-            ThesaurusEntries = new SlangFilter();
-            ThesaurusEntries = ParseSlangFilterJSON(sThesPool, sLang + "_Key", sLang + "_Replace", ThesaurusEntries);
-
-
-            ThesaurusEntries_EN = new SlangFilter();
-            ThesaurusEntries_EN = ParseSlangFilterJSON(sThesPool, sLang_EN + "_Key", sLang_EN + "_Replace", ThesaurusEntries);
         }
 
 
@@ -201,44 +174,7 @@ namespace HearMeRoar.ViewModels
             return sRet;
         }
 
-        private SlangFilter ParseSlangFilterJSON(string sJSON, string slangWordKey, string slangWordReplace, SlangFilter dict)
-        {
-            var array = JArray.Parse(sJSON);
-            string sWordKey = String.Empty;
-            string sWordReplace = String.Empty;
-            int i = 0;
-            foreach (var item in array)
-            {
-                try
-                {
-                    sWordKey = String.Empty;
-                    sWordReplace = String.Empty;
-                    try
-                    {
-                        sWordKey = item[slangWordKey].ToString();
-                        sWordReplace = item[slangWordReplace].ToString();
-
-                        dict.InsultFilterItems.Add(new SlangFilter.SlangFilterItem(sWordKey, sWordReplace));
-                    }
-                    catch (Exception e)
-                    {
-                        //do something or do nothing
-                    }
-                    finally
-                    {
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //do something
-                }
-                i += 1;
-            }
-
-            return dict;
-
-        }
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
         {
@@ -375,54 +311,34 @@ namespace HearMeRoar.ViewModels
             NotificationText = string.Empty;
 
 
-            //randomize the insult pool records
-            if (rnd.Next(0, salutationCount) <= salutationOccurence)
-            {
-                MessageSalutation = GetRandomEntry(rnd, lstSalutePool) + " ";
-            }
-            else
-            {
-                MessageSalutation = string.Empty;
-            }
-
-            EmailSubjectText = GetRandomEntry(rnd, lstSubjPool) + " ";
-
-            Body1 = GetRandomEntry(rnd, lstBodyPool) + " ";
-
-            MsgCloseText = GetRandomEntry(rnd, lstClosePool) + " ";
-
-            MsgSignText = GetRandomEntry(rnd, lstSignPool) + " ";
+            //MsgSignText_EN = GetFullMsgText_EN(sSignPool, MsgSignText.ToString(), "RU", "EN");
 
 
-
-            MessageSalutation_EN = GetFullMsgText_EN(sSalutePool, MessageSalutation.ToString(), "RU", "EN");
-            EmailSubjectText_EN = GetFullMsgText_EN(sSubjPool, EmailSubjectText.ToString(), "RU", "EN");
-            Body1_EN = GetFullMsgText_EN(sBodyPool, Body1.ToString(), "RU", "EN");
-            MsgCloseText_EN = GetFullMsgText_EN(sClosePool, MsgCloseText.ToString(), "RU", "EN");
-            MsgSignText_EN = GetFullMsgText_EN(sSignPool, MsgSignText.ToString(), "RU", "EN");
-
-
-            FullMessageText_EN = MessageSalutation_EN.ToString() + "\r\n\r\n" + Body1_EN.ToString() + "\r\n\r\n" + MsgCloseText_EN.ToString() + "\r\n\r\n" + MsgSignText_EN.ToString();
+            //FullMessageText_EN = MessageSalutation_EN.ToString() + "\r\n\r\n" + Body1_EN.ToString() + "\r\n\r\n" + MsgCloseText_EN.ToString() + "\r\n\r\n" + MsgSignText_EN.ToString();
             OnPropertyChanged("FullMessageTextDisplay_EN");
 
             CreateMessageImage();
             ShowShare = true;
+            OnPropertyChanged("ShowShare");
+
+            OnPropertyChanged("FullMessageTextDisplay");
+            OnPropertyChanged("FullMessageText");
         }
 
 
         public virtual async void SayMessage()
         {
             NotificationColor = "Black";
-            string sMsg = MessageSalutation.ToString() + EmailSubjectText.ToString() + Body1.ToString() + MsgCloseText.ToString() + MsgSignText.ToString();
-            SayStuffAsync(Thesaurusify(sMsg));
+            string sMsg = FullMessageText;
+            SayStuffAsync((sMsg));
         }
 
 
         public virtual async void CopyToClipboard()
         {
             NotificationColor = "Black";
-            string sMsg = MessageSalutation.ToString() + EmailSubjectText.ToString() + Body1.ToString() + MsgCloseText.ToString() + MsgSignText.ToString();
-            await Clipboard.SetTextAsync(Thesaurusify(sMsg));
+            string sMsg = FullMessageText;
+            await Clipboard.SetTextAsync((sMsg));
         }
 
         SKBitmap shareBackground;
@@ -471,7 +387,7 @@ namespace HearMeRoar.ViewModels
 
                     var message = new EmailMessage
                     {
-                        Subject = EmailSubjectText.ToString(),
+                        //Subject = EmailSubjectText.ToString(),
                         Body = FullMessageTextDisplay,
                         Bcc = lstEmails
                     };
@@ -495,7 +411,6 @@ namespace HearMeRoar.ViewModels
             {
                 // Some other exception occurred  
             }
-            ShowRunning = false;
         }
 
         public void CreateMessageImage(bool loadEmpty = false)
@@ -503,7 +418,7 @@ namespace HearMeRoar.ViewModels
             string sFullMsgText = "";
             if (loadEmpty == false)
             {
-                sFullMsgText = MessageSalutation.ToString() + "\r\n\r\n" + Body1.ToString() + "\r\n\r\n" + MsgCloseText.ToString() + "\r\n\r\n" + MsgSignText.ToString();
+                sFullMsgText = FullMessageText;
             }
             int memeWidth = 600;
             int memeHeight = 300;
@@ -645,7 +560,7 @@ namespace HearMeRoar.ViewModels
             using (var image = SKImage.FromBitmap(ShareBitmap))
             using (var data = image.Encode(SKEncodedImageFormat.Png, 80))
             { // save the data to a stream
-                using (Stream fileStream = File.Open(System.IO.Path.Combine(FileSystem.AppDataDirectory, shareFileName), FileMode.Create))
+                using (Stream fileStream = File.Open(System.IO.Path.Combine(FileSystem.AppDataDirectory, "x" + shareFileName), FileMode.Create))
                 {
                     data.SaveTo(fileStream);    //fileStream.Write(Contents, 0, Contents.Length);
                 }
